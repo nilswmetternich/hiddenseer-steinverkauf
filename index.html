@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiddenseer Steinverkauf</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ANNIVERSARY FIREWORKS OVERLAY -->
+<div id="anniversary-overlay">
+  <canvas id="fireworks-canvas"></canvas>
+  <div id="anniversary-text">
+    <div class="anni-badge">✨ 10 Jahre ✨</div>
+    <h1>Hiddenseer Steinverkauf</h1>
+    <p>Celebrating 10 Years of Natural Treasures</p>
+    <button onclick="closeOverlay()">Besuche unseren Shop →</button>
+  </div>
+</div>
+
+<!-- LANGUAGE SELECTOR -->
+<div id="lang-bar">
+  <span>🌐</span>
+  <button class="lang-btn active" onclick="setLang('de')">DE</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('es')">ES</button>
+  <button class="lang-btn" onclick="setLang('sv')">SV</button>
+  <button class="lang-btn" onclick="setLang('da')">DA</button>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-area">
+      <img src="images/wappen.png" alt="Wappen Hiddensee" class="site-crest">
+      <div>
+        <h1 class="site-title">Hiddenseer Steinverkauf</h1>
+        <p class="site-sub" data-i18n="tagline">Natur · Schönheit · Hiddensee</p>
+      </div>
+    </div>
+    <nav>
+      <a href="#shop" data-i18n="nav_shop">Shop</a>
+      <a href="about.html" data-i18n="nav_about">Über uns</a>
+      <div id="basket-icon" onclick="toggleBasket()">
+        🛒 <span id="basket-count">0</span>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- WAVE HEADER → HERO -->
+<div class="wave-top">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg"><path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#e8f4fc"/></svg>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="opening-hours-badge">
+      <span class="oh-dot"></span>
+      <span data-i18n="open_status">Geöffnet heute</span>
+      <span class="oh-times">10:00 – 18:00</span>
+      <span class="oh-sep">·</span>
+      <span class="oh-extra">Mo–Fr 10–18 &nbsp;·&nbsp; Sa 10–17 &nbsp;·&nbsp; So 11–15</span>
+    </div>
+    <h2 data-i18n="hero_title">Naturschätze aus Hiddensee</h2>
+    <p data-i18n="hero_sub">Handverlesene Steine, Magneten, Bilder und Schlüsselanhänger — direkt von der Insel.</p>
+    <a href="#shop" class="cta-btn" data-i18n="hero_cta">Kollektion entdecken</a>
+  </div>
+</section>
+
+<!-- WAVE SCATTER -->
+<div class="wave-scatter">
+  <svg viewBox="0 0 800 40" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C100,0 200,40 300,20 C400,0 500,40 600,20 C700,0 800,40 800,20" stroke="#005B94" stroke-width="2" fill="none" opacity="0.2"/></svg>
+</div>
+
+<!-- SHOP SECTION -->
+<section id="shop">
+  <div class="section-header">
+    <h2 data-i18n="shop_title">Unsere Kollektion</h2>
+    <p data-i18n="shop_sub">Reserviere Artikel online — bezahle &amp; hole sie im Laden ab.</p>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterCat('all', event)" data-i18n="filter_all">Alle</button>
+    <button class="filter-btn" onclick="filterCat('stones', event)" data-i18n="filter_stones">🪨 Steine</button>
+    <button class="filter-btn" onclick="filterCat('keyrings', event)" data-i18n="filter_keyrings">🔑 Schlüsselanhänger</button>
+    <button class="filter-btn" onclick="filterCat('magnets', event)" data-i18n="filter_magnets">🧲 Magneten</button>
+    <button class="filter-btn" onclick="filterCat('pictures', event)" data-i18n="filter_pictures">🖼️ Bilder</button>
+  </div>
+
+  <div id="product-grid" class="product-grid"></div>
+</section>
+
+<!-- WAVE SCATTER 2 -->
+<div class="wave-scatter right">
+  <svg viewBox="0 0 800 40" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C100,40 200,0 300,20 C400,40 500,0 600,20 C700,40 800,0 800,20" stroke="#FDB913" stroke-width="2" fill="none" opacity="0.3"/></svg>
+</div>
+
+<!-- BASKET DRAWER -->
+<div id="basket-drawer" class="hidden">
+  <div class="drawer-overlay" onclick="toggleBasket()"></div>
+  <div class="drawer-panel">
+    <div class="drawer-header">
+      <h3 data-i18n="basket_title">🛒 Dein Warenkorb</h3>
+      <button onclick="toggleBasket()">✕</button>
+    </div>
+    <div id="basket-items"></div>
+    <div id="basket-empty" data-i18n="basket_empty">Dein Warenkorb ist leer.</div>
+    <div id="basket-footer" class="hidden">
+      <div class="basket-total"><span data-i18n="total">Gesamt:</span> <strong id="basket-total-price">€0.00</strong></div>
+      <button class="cta-btn full-width" onclick="showCheckout()" data-i18n="checkout_btn">Zur Reservierung</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div id="checkout-modal" class="modal hidden">
+  <div class="modal-overlay" onclick="closeCheckout()"></div>
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeCheckout()">✕</button>
+    <h3 data-i18n="checkout_title">Artikel reservieren</h3>
+    <p class="checkout-info" data-i18n="checkout_info">⏱️ Reservierungen sind <strong>24 Stunden</strong> gültig. Mit einem Kommentar können wir eine andere Zeit vereinbaren.</p>
+    <div id="checkout-summary"></div>
+    <div class="form-group">
+      <label data-i18n="label_name">Dein Name *</label>
+      <input type="text" id="checkout-name" placeholder="Vollständiger Name" required>
+    </div>
+    <div class="form-group">
+      <label data-i18n="label_comment">Kommentar (optional)</label>
+      <textarea id="checkout-comment" rows="3" placeholder="z.B. Abholung am Samstag nach 15 Uhr..."></textarea>
+    </div>
+    <button class="cta-btn full-width" onclick="submitReservation()" data-i18n="submit_btn">Jetzt reservieren</button>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div id="success-modal" class="modal hidden">
+  <div class="modal-overlay" onclick="closeSuccess()"></div>
+  <div class="modal-box success-box">
+    <div class="success-icon">✅</div>
+    <h3 id="success-title">Reservierung bestätigt!</h3>
+    <p id="success-msg"></p>
+    <button class="cta-btn full-width" onclick="closeSuccess()">Schließen</button>
+  </div>
+</div>
+
+<!-- WAVE BEFORE FOOTER -->
+<div class="wave-footer">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg"><path d="M0,30 C360,0 720,60 1080,30 C1260,15 1380,40 1440,30 L1440,60 L0,60 Z" fill="#005B94"/></svg>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+
+    <!-- col 1: brand -->
+    <div class="footer-col">
+      <div class="footer-logo-row">
+        <img src="images/wappen.png" alt="Wappen Hiddensee" class="footer-crest">
+        <div>
+          <div class="footer-site-title">Hiddenseer Steinverkauf</div>
+          <div class="footer-site-sub" data-i18n="tagline">Natur · Schönheit · Hiddensee</div>
+        </div>
+      </div>
+      <p data-i18n="footer_about">Naturschätze direkt von der Insel Hiddensee — seit 10 Jahren.</p>
+    </div>
+
+    <!-- col 2: opening hours -->
+    <div class="footer-col">
+      <h4 data-i18n="footer_hours">Öffnungszeiten</h4>
+      <div class="footer-hours">
+        <div class="fh-row"><strong data-i18n="mon_fri">Mo – Fr</strong><span>10:00 – 18:00</span></div>
+        <div class="fh-row"><strong data-i18n="sat">Samstag</strong><span>10:00 – 17:00</span></div>
+        <div class="fh-row"><strong data-i18n="sun">Sonntag</strong><span>11:00 – 15:00</span></div>
+      </div>
+    </div>
+
+    <!-- col 3: map -->
+    <div class="footer-col">
+      <h4 data-i18n="footer_find">Uns finden</h4>
+      <a class="map-link" href="https://www.google.com/maps/place/Hiddenseer+Steinverkauf/@54.5853744,13.1050483,19z/data=!3m1!4b1!4m6!3m5!1s0x47aca70046155349:0xa0bb24fb8f7de038!8m2!3d54.5853744!4d13.105692!16s%2Fg%2F11xrpz3xcw" target="_blank" data-i18n="footer_map">📍 Auf Google Maps öffnen</a>
+      <div class="map-embed">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d361.3!2d13.1050483!3d54.5853744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47aca70046155349%3A0xa0bb24fb8f7de038!2sHiddenseer+Steinverkauf!5e0!3m2!1sde!2sde!4v1"
+          width="100%" height="150" style="border:0;border-radius:8px;" allowfullscreen="" loading="lazy">
+        </iframe>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 Hiddenseer Steinverkauf · <span data-i18n="footer_rights">Alle Rechte vorbehalten</span></p>
+    <div class="footer-legal">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/products.js"></script>
+<script src="js/fireworks.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

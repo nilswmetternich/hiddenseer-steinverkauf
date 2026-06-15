@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Über uns – Hiddenseer Steinverkauf</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/about-extra.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div id="lang-bar">
+  <span>🌐</span>
+  <button class="lang-btn active" onclick="setLang('de')">DE</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('es')">ES</button>
+  <button class="lang-btn" onclick="setLang('sv')">SV</button>
+  <button class="lang-btn" onclick="setLang('da')">DA</button>
+</div>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-area">
+      <img src="images/wappen.png" alt="Wappen Hiddensee" class="site-crest">
+      <div>
+        <h1 class="site-title">Hiddenseer Steinverkauf</h1>
+        <p class="site-sub" data-i18n="tagline">Natur · Schönheit · Hiddensee</p>
+      </div>
+    </div>
+    <nav>
+      <a href="index.html" data-i18n="nav_shop">Shop</a>
+      <a href="about.html" class="active" data-i18n="nav_about">Über uns</a>
+      <div id="basket-icon" onclick="window.location='index.html'">🛒</div>
+    </nav>
+  </div>
+</header>
+
+<div class="wave-top">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg"><path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#e8f4fc"/></svg>
+</div>
+
+<section id="about-hero">
+  <div class="about-hero-inner">
+    <span class="about-eyebrow" data-i18n="about_eyebrow">Unsere Geschichte</span>
+    <h2 data-i18n="about_title">Unsere Geschichte</h2>
+    <p data-i18n="about_intro">Ein Familienunternehmen auf Hiddensee — handgefertigte Schätze mit Herz und Leidenschaft seit über 10 Jahren.</p>
+  </div>
+</section>
+
+<div class="wave-scatter">
+  <svg viewBox="0 0 800 40" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C100,0 200,40 300,20 C400,0 500,40 600,20 C700,0 800,40 800,20" stroke="#005B94" stroke-width="2" fill="none" opacity="0.2"/></svg>
+</div>
+
+<section class="about-content">
+  <div class="about-grid">
+    <div class="about-text">
+      <h3 data-i18n="about_story_title">Unsere Geschichte</h3>
+      <p data-i18n="about_story_1">Wir sind ein kleines Familienunternehmen auf der wunderschönen Insel Hiddensee...</p>
+      <p data-i18n="about_story_2">Ob du deinen Urlaub auf Hiddensee verbringst...</p>
+      <p data-i18n="about_story_3">Wir sind dankbar für die Unterstützung der letzten zehn Jahre...</p>
+    </div>
+    <div class="about-values">
+      <div class="value-card">
+        <div class="value-icon"><i class="ti ti-users" aria-hidden="true"></i></div>
+        <div>
+          <h4 data-i18n="val2_title">Persönlich</h4>
+          <p data-i18n="val2_desc">Wir kennen unsere Kunden und freuen uns über jeden Besuch.</p>
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><i class="ti ti-hammer" aria-hidden="true"></i></div>
+        <div>
+          <h4 data-i18n="val3_title">Handgemacht</h4>
+          <p data-i18n="val3_desc">Jedes Produkt ist von uns mit Sorgfalt und Leidenschaft handgefertigt.</p>
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><i class="ti ti-leaf" aria-hidden="true"></i></div>
+        <div>
+          <h4 data-i18n="val4_title">Nachhaltig</h4>
+          <p data-i18n="val4_desc">Wir achten auf die Natur, die uns so viel Schönes schenkt.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wave-scatter right">
+  <svg viewBox="0 0 800 40" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C100,40 200,0 300,20 C400,40 500,0 600,20 C700,40 800,0 800,20" stroke="#FDB913" stroke-width="2" fill="none" opacity="0.3"/></svg>
+</div>
+
+<!-- ANNIVERSARY BAND WITH FIREWORKS -->
+<section class="anni-section">
+  <canvas id="anni-canvas"></canvas>
+  <div class="anni-inner">
+    <div class="anni-number">10</div>
+    <div class="anni-text-block">
+      <h3 data-i18n="anni_title">Jahre auf Hiddensee</h3>
+      <p data-i18n="anni_desc">Seit einem Jahrzehnt sind wir für unsere Gäste da. Danke für eure Treue und euer Vertrauen — auf die nächsten 10 Jahre!</p>
+    </div>
+  </div>
+</section>
+
+<div class="wave-footer">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg"><path d="M0,30 C360,0 720,60 1080,30 C1260,15 1380,40 1440,30 L1440,60 L0,60 Z" fill="#005B94"/></svg>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-logo-row">
+        <img src="images/wappen.png" alt="Wappen Hiddensee" class="footer-crest">
+        <div>
+          <div class="footer-site-title">Hiddenseer Steinverkauf</div>
+          <div class="footer-site-sub" data-i18n="tagline">Natur · Schönheit · Hiddensee</div>
+        </div>
+      </div>
+      <p data-i18n="footer_about">Naturschätze direkt von der Insel Hiddensee — seit 10 Jahren.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer_hours">Öffnungszeiten</h4>
+      <div class="footer-hours">
+        <div class="fh-row"><strong data-i18n="mon_fri">Mo – Fr</strong><span>10:00 – 18:00</span></div>
+        <div class="fh-row"><strong data-i18n="sat">Samstag</strong><span>10:00 – 17:00</span></div>
+        <div class="fh-row"><strong data-i18n="sun">Sonntag</strong><span>11:00 – 15:00</span></div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer_find">Uns finden</h4>
+      <a class="map-link" href="https://www.google.com/maps/place/Hiddenseer+Steinverkauf/@54.5853744,13.1050483,19z/data=!3m1!4b1!4m6!3m5!1s0x47aca70046155349:0xa0bb24fb8f7de038!8m2!3d54.5853744!4d13.105692!16s%2Fg%2F11xrpz3xcw" target="_blank" data-i18n="footer_map">📍 Auf Google Maps öffnen</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 Hiddenseer Steinverkauf · <span data-i18n="footer_rights">Alle Rechte vorbehalten</span></p>
+    <div class="footer-legal">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/about-fireworks.js"></script>
+<script>
+  const stored = localStorage.getItem('hs_lang') || 'de';
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${stored}')"]`)?.classList.add('active');
+  applyLang(stored);
+</script>
+</body>
+</html>
