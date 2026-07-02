@@ -1,5 +1,14 @@
 // ===== HIDDENSEER STEINVERKAUF — APP LOGIC =====
 
+// ── EMAIL SETUP ──
+// 1) Go to https://formspree.io, make a free account + form pointed at your email.
+// 2) Paste your form ID below (e.g. 'xpznqkwy') instead of 'YOUR_FORMSPREE_ID'.
+// Until you do this, reservations fall back to opening the CUSTOMER's own email
+// app with a pre-filled message — they still have to press "send" themselves,
+// so some reservations may not reach you. Formspree sends it automatically.
+const FORMSPREE_ENDPOINT = 'xzdlkrkq';
+const OWNER_EMAIL = 'DEINE_EMAIL@beispiel.de'; // used only for the mailto fallback
+
 // ── BASKET STATE ──
 let basket = [];
 
@@ -115,13 +124,6 @@ async function submitReservation() {
   const itemsList = basket.map(b => `${getProductName(b)} x${b.qty || 1} (€${(b.price * (b.qty || 1)).toFixed(2)})`).join('\n');
   const hasComment = comment && comment.length > 0;
 
-  // ── SEND EMAIL NOTIFICATION via EmailJS / Formspree ──
-  // NOTE: Replace FORMSPREE_ID with your actual Formspree endpoint ID at https://formspree.io
-  // Or use EmailJS by setting up an account at https://emailjs.com
-  // Fallback: sends to mailto: link
-
-  const FORMSPREE_ENDPOINT = 'YOUR_FORMSPREE_ID'; // <-- REPLACE with your Formspree form ID e.g. 'xpznqkwy'
-
   const payload = {
     type: '🛒 RESERVIERUNG / RESERVATION',
     customer_name: name,
@@ -134,26 +136,44 @@ async function submitReservation() {
     timestamp: new Date().toLocaleString('de-DE')
   };
 
+  // ── SEND EMAIL NOTIFICATION ──
+  // Your site is static HTML/CSS/JS with no build step, and the reservation
+  // isn't a single native <form> (it's assembled from basket state), so we
+  // talk to Formspree directly via fetch — this is the same underlying
+  // mechanism their @formspree/ajax library wraps, just without the extra
+  // dependency, since a bundler/build step isn't part of your setup.
+  // Everything here is wrapped in try/catch so that even if email sending
+  // fails for any reason, the customer still sees a confirmation and the
+  // basket/stock still update correctly — a broken notification should
+  // never break the reservation itself.
   let sent = false;
-
-  if (FORMSPREE_ENDPOINT !== 'YOUR_FORMSPREE_ID') {
-    try {
+  try {
+    if (FORMSPREE_ENDPOINT !== 'YOUR_FORMSPREE_ID') {
       const resp = await fetch(`https://formspree.io/f/${FORMSPREE_ENDPOINT}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(payload)
       });
-      sent = resp.ok;
-    } catch (e) { console.error('Formspree error:', e); }
-  }
+      if (resp.ok) {
+        sent = true;
+      } else {
+        // Formspree returns { errors: [{ field, message }, ...] } on failure
+        const data = await resp.json().catch(() => null);
+        const msg = data?.errors?.map(e => e.message).join(', ') || `HTTP ${resp.status}`;
+        console.error('Formspree rejected the submission:', msg);
+      }
+    }
+  } catch (e) { console.error('Formspree network error:', e); }
 
-  // Fallback mailto if not configured
+  // Fallback mailto if Formspree isn't set up or the request failed
   if (!sent) {
-    const subject = encodeURIComponent(`Neue Reservierung: ${name}`);
-    const body = encodeURIComponent(
-      `NEUE RESERVIERUNG\n\nName: ${name}\nE-Mail: ${email}\n\nArtikel:\n${itemsList}\n\nGesamt: €${total.toFixed(2)}\n\nAbholung: ${payload.pickup_deadline}\nKommentar: ${comment || '—'}\n\nZeitpunkt: ${payload.timestamp}`
-    );
-    window.open(`mailto:DEINE_EMAIL@beispiel.de?subject=${subject}&body=${body}`);
+    try {
+      const subject = encodeURIComponent(`Neue Reservierung: ${name}`);
+      const body = encodeURIComponent(
+        `NEUE RESERVIERUNG\n\nName: ${name}\n\nArtikel:\n${itemsList}\n\nGesamt: €${total.toFixed(2)}\n\nAbholung: ${payload.pickup_deadline}\nKommentar: ${comment || '—'}\n\nZeitpunkt: ${payload.timestamp}`
+      );
+      window.open(`mailto:${OWNER_EMAIL}?subject=${subject}&body=${body}`);
+    } catch (e) { console.error('Mailto fallback error:', e); }
   }
 
   // Update stock visually
