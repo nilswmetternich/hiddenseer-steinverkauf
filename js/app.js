@@ -7,7 +7,7 @@
 // app with a pre-filled message — they still have to press "send" themselves,
 // so some reservations may not reach you. Formspree sends it automatically.
 const FORMSPREE_ENDPOINT = 'xzdlkrkq';
-const OWNER_EMAIL = 'jaspermetternich@gmail.com'; // used only for the mailto fallback
+const OWNER_EMAIL = 'nilsmetternich@gmail.com'; // used only for the mailto fallback
 
 // ── BASKET STATE ──
 let basket = [];
