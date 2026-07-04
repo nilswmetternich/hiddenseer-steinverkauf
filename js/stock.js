@@ -60,20 +60,18 @@ async function fetchStock() {
 // Tell the sheet that these items were just reserved, so it can decrement
 // stock for every future visitor and email the owner if anything hits 0.
 //
-// Uses mode: 'no-cors' — since Apps Script doesn't send CORS headers, we
-// can't read the response anyway, but the write still happens server-side
-// regardless. We just fire the request and refresh from the sheet shortly
-// after so the UI reflects the update.
+// Uses navigator.sendBeacon instead of fetch() — Apps Script Web Apps
+// respond via an internal redirect that trips up fetch()'s CORS handling
+// in some browsers (notably Safari), even in fire-and-forget modes.
+// sendBeacon is built exactly for "send this, don't need the response"
+// requests like this one, and isn't subject to that CORS blocking.
 async function reportReservationToSheet(items) {
   if (STOCK_API_URL === 'YOUR_APPS_SCRIPT_URL') return;
 
   try {
-    await fetch(STOCK_API_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ items })
-    });
+    const blob = new Blob([JSON.stringify({ items })], { type: 'text/plain;charset=utf-8' });
+    const queued = navigator.sendBeacon(STOCK_API_URL, blob);
+    if (!queued) console.error('Browser could not queue the stock update (sendBeacon returned false)');
   } catch (e) {
     console.error('Could not reach stock sheet (reservation still went through):', e);
   }
