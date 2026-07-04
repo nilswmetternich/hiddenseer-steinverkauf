@@ -9,6 +9,33 @@ const STOCK_POLL_INTERVAL = 20000;
 
 let stockLoaded = false;
 
+// Apps Script Web Apps don't send CORS headers, so a normal cross-origin
+// fetch() gets blocked by the browser even though the request succeeds
+// server-side. JSONP (loading the response via a <script> tag) sidesteps
+// this, since browsers don't apply CORS rules to script tags.
+function jsonpRequest(url, timeoutMs = 8000) {
+  return new Promise((resolve, reject) => {
+    const callbackName = 'stockCb_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+    const script = document.createElement('script');
+
+    const cleanup = () => {
+      delete window[callbackName];
+      script.remove();
+    };
+
+    window[callbackName] = (data) => { cleanup(); resolve(data); };
+    script.onerror = () => { cleanup(); reject(new Error('JSONP request failed to load')); };
+
+    const separator = url.includes('?') ? '&' : '?';
+    script.src = `${url}${separator}callback=${callbackName}`;
+    document.body.appendChild(script);
+
+    setTimeout(() => {
+      if (window[callbackName]) { cleanup(); reject(new Error('JSONP request timed out')); }
+    }, timeoutMs);
+  });
+}
+
 // Fetch current stock for every product from the Google Sheet and merge
 // it into the local PRODUCTS array (names/prices/descriptions stay local —
 // only the `stock` number is shared across all visitors via the sheet).
@@ -16,9 +43,7 @@ async function fetchStock() {
   if (STOCK_API_URL === 'YOUR_APPS_SCRIPT_URL') return; // not configured yet
 
   try {
-    const resp = await fetch(STOCK_API_URL, { method: 'GET' });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const rows = await resp.json();
+    const rows = await jsonpRequest(STOCK_API_URL);
 
     rows.forEach(row => {
       const product = PRODUCTS.find(p => p.id === Number(row.id));
@@ -34,24 +59,28 @@ async function fetchStock() {
 
 // Tell the sheet that these items were just reserved, so it can decrement
 // stock for every future visitor and email the owner if anything hits 0.
-// Uses text/plain as the content-type on purpose — Apps Script Web Apps
-// don't handle CORS preflight (OPTIONS) requests, and sending as text/plain
-// avoids the browser triggering one, while the script still parses it as JSON.
+//
+// Uses mode: 'no-cors' — since Apps Script doesn't send CORS headers, we
+// can't read the response anyway, but the write still happens server-side
+// regardless. We just fire the request and refresh from the sheet shortly
+// after so the UI reflects the update.
 async function reportReservationToSheet(items) {
-  if (STOCK_API_URL === 'YOUR_APPS_SCRIPT_URL') return { ok: false };
+  if (STOCK_API_URL === 'YOUR_APPS_SCRIPT_URL') return;
 
   try {
-    const resp = await fetch(STOCK_API_URL, {
+    await fetch(STOCK_API_URL, {
       method: 'POST',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ items })
     });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    return await resp.json();
   } catch (e) {
-    console.error('Could not update live stock sheet:', e);
-    return { ok: false };
+    console.error('Could not reach stock sheet (reservation still went through):', e);
   }
+
+  // Give the sheet a moment to save, then refresh so stock is accurate
+  // everywhere — including the sold-out email logic on the sheet's side.
+  setTimeout(fetchStock, 1500);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -60,3 +89,4 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(fetchStock, 100);
   setInterval(fetchStock, STOCK_POLL_INTERVAL);
 });
+
