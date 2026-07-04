@@ -176,11 +176,19 @@ async function submitReservation() {
     } catch (e) { console.error('Mailto fallback error:', e); }
   }
 
-  // Update stock visually
+  // Update stock visually (optimistic — this browser's own view updates
+  // instantly; the shared sheet update below is what other visitors see)
   basket.forEach(b => {
     const prod = PRODUCTS.find(p => p.id === b.id);
     if (prod) prod.stock = Math.max(0, prod.stock - (b.qty || 1));
   });
+
+  // Tell the shared Google Sheet about this reservation so stock stays in
+  // sync for every visitor, and so the sold-out email can fire if needed.
+  // Wrapped so a sheet hiccup never blocks the reservation confirmation.
+  try {
+    await reportReservationToSheet(basket.map(b => ({ id: b.id, qty: b.qty || 1 })));
+  } catch (e) { console.error('Stock sheet update failed:', e); }
 
   // Clear basket
   basket = [];
