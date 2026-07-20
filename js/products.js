@@ -24,16 +24,10 @@ const PRODUCTS = [
   },
   // KEYRINGS
   {
-    id: 4, category: "keyrings",
-    name_de: "Schlüsselanhänger – Leuchtturm", name_en: "Lighthouse Keyring", name_es: "Llavero Faro", name_sv: "Fyrnyckelring", name_da: "Fyrnøglering",
-    desc_de: "Holz-Schlüsselanhänger mit Leuchtturm-Motiv, handgemacht.", desc_en: "Wooden lighthouse keyring, handmade.", desc_es: "Llavero de madera con motivo de faro, artesanal.", desc_sv: "Träfyrnyckelring, handgjord.", desc_da: "Træfyrnøglering, håndlavet.",
-    price: 3.50, stock: 20, emoji: "🗝️", image: null
-  },
-  {
-    id: 5, category: "keyrings",
-    name_de: "Schlüsselanhänger – Seepferdchen", name_en: "Seahorse Keyring", name_es: "Llavero Caballito de mar", name_sv: "Sjöhästnyckelring", name_da: "Søhestnøglering",
-    desc_de: "Goldenes Seepferdchen als Schlüsselanhänger.", desc_en: "Golden seahorse keyring.", desc_es: "Llavero con caballito de mar dorado.", desc_sv: "Guldig sjöhästnyckelring.", desc_da: "Gylden søhestnøglering.",
-    price: 4.00, stock: 8, emoji: "🐴", image: null
+    id: 11, category: "keyrings",
+    name_de: "Schlüsselanhänger – Muschel", name_en: "Seashell Keyring", name_es: "Llavero Concha", name_sv: "Snäckskalsnyckelring", name_da: "Muslingenøglering",
+    desc_de: "Handgemachter Schlüsselanhänger mit echter Muschel von Hiddensee.", desc_en: "Handmade keyring featuring a genuine Hiddensee seashell.", desc_es: "Llavero artesanal con una concha auténtica de Hiddensee.", desc_sv: "Handgjord nyckelring med ett äkta snäckskal från Hiddensee.", desc_da: "Håndlavet nøglering med en ægte Hiddensee-musling.",
+    price: 3.00, stock: 20, emoji: "🐚", image: "images/keyrings/seashell.png"
   },
   // MAGNETS
   {
